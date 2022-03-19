@@ -1,7 +1,9 @@
 ﻿#include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include "DownloadObj.h"
 #include <QQmlContext>
+#include "DownloadObj.h"
+#include "ProcObj.h"
+#include "FuncModel.h"
 
 int main(int argc, char *argv[])
 {
@@ -23,6 +25,8 @@ int main(int argc, char *argv[])
     //创建属性
     QQmlContext *ctx = engine.rootContext();
     ctx->setContextProperty("downloader", new DownloadObj);
+    ctx->setContextProperty("proc", new ProcObj);
+    ctx->setContextProperty("listModel", new FuncModel);
     //导入main.qml
     engine.load(url);
     return app.exec();

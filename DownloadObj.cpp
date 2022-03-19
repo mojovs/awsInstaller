@@ -7,16 +7,7 @@
 DownloadObj::DownloadObj(QObject *parent) : QObject{parent}
 {
     urlStr =
-        "http://tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/d81456bd-ee18-43b1-8257-626d01eb2409?P1=1647427374&P2=404&P3=2&P4=liso8OGdxB8DdRLm9mICBEi6R8vfdf5n9XLCxlJojXZ2Kd2Y%2btPdarO92fmsnQZMFb6mG4VvmzslZrTd6RT8xQ%3d%3d";
-    QString filePath = QDir::currentPath() + "/aws.Msixbundle";
-    m_file           = new QFile(filePath);
-    //打开文件
-    if (!m_file->open(QIODevice::WriteOnly))
-    {
-        emit("Open file erro");
-        qDebug() << "Open file erro";
-        return;
-    }
+        "http://tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/d81456bd-ee18-43b1-8257-626d01eb2409?P1=1647557013&P2=404&P3=2&P4=easbluK5ALs30p34hghgD0FYRjqFNocncv%2b97jRG9s9E8YnkgreRfrHrhljU3oJsyUP8C5EV1PSR%2flqu4uLoaA%3d%3d";
 }
 
 /*----- 析构 -----*/
@@ -27,6 +18,15 @@ DownloadObj::~DownloadObj()
 /*----- 开始执行网络下载 -----*/
 void DownloadObj::start()
 {
+    QString filePath = QDir::currentPath() + "/aws.Msixbundle";
+    m_file           = new QFile(filePath);
+    //打开文件
+    if (!m_file->open(QIODevice::WriteOnly))
+    {
+        emit("Open file erro");
+        qDebug() << "Open file erro";
+        return;
+    }
     //初始化url
     QUrl urlSpec = QUrl::fromUserInput(urlStr);
     if ((!urlSpec.isValid()) || urlStr.isEmpty())
@@ -42,7 +42,6 @@ void DownloadObj::start()
     //开始计时
     m_downloadTimer.start();
 }
-
 /*----- urlStr qml属性 -----*/
 const QString &DownloadObj::getUrlStr() const
 {
