@@ -5,6 +5,7 @@
 #define CMD ""
 #define POWERSHELL ("powershell")
 #define DISM ("dism")
+#define ADB ("adb-tools/adb.exe")
 /*------ 构造 ------*/
 CmdProc::CmdProc(QObject *parent) : QProcess(parent)
 {
@@ -88,6 +89,21 @@ void CmdProc::installSubSystem(const QString &path)
     args << "Add-AppxPackage"
          << "-path" << path;
     execute(POWERSHELL, args);
+    //等待安装完成
+}
+
+void CmdProc::adbConnectSubSystem(const QString &ip)
+{
+    QStringList args;
+    args << "connect" << ip;
+    execute(ADB, args);
+}
+
+void CmdProc::adbInstallApk(const QString &apkPath)
+{
+    QStringList args;
+    args << "install" << apkPath;
+    execute(ADB, args);
 }
 
 QSharedPointer<QMap<QString, bool>> &CmdProc::getFuncList()
@@ -126,6 +142,16 @@ QSharedPointer<QMap<QString, bool>> &CmdProc::getFuncList()
         ptr->insert(key, value); //添加到表中
     }
     return ptr;
+}
+
+const QString &CmdProc::stdOutput() const
+{
+    return m_stdOutput;
+}
+
+void CmdProc::setStdOutput(const QString &newStdOutput)
+{
+    m_stdOutput = newStdOutput;
 }
 
 /*------ 绑定所有信号------*/

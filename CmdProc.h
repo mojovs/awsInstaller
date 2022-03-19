@@ -28,7 +28,14 @@ class CmdProc : public QProcess
     void disableFunction(const QString &funcName); //禁止系统某个功能
     void installSubSystem(const QString &path);    //安装子系统
 
+    // adb命令
+    void adbConnectSubSystem(const QString &ip); //连接到系统
+    void adbInstallApk(const QString &apkPath);  //安装包路径
+
     QSharedPointer<QMap<QString, bool>> &getFuncList(); //获取map
+
+    const QString &stdOutput() const;
+    void setStdOutput(const QString &newStdOutput);
 
   private:
     QString m_stdOutput = "";

@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/shark.ico</file>
+        <file>res/bird.wav</file>
+    </qresource>
+</RCC>

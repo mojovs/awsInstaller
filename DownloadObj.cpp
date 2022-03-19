@@ -6,8 +6,8 @@
 /*----- 构造 -----*/
 DownloadObj::DownloadObj(QObject *parent) : QObject{parent}
 {
-    urlStr =
-        "http://tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/d81456bd-ee18-43b1-8257-626d01eb2409?P1=1647557013&P2=404&P3=2&P4=easbluK5ALs30p34hghgD0FYRjqFNocncv%2b97jRG9s9E8YnkgreRfrHrhljU3oJsyUP8C5EV1PSR%2flqu4uLoaA%3d%3d";
+    m_urlStr =
+        "http://tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/d81456bd-ee18-43b1-8257-626d01eb2409?P1=1647723330&P2=404&P3=2&P4=NhJ%2fHFmps76NkssFpdD2fJT8t19Y%2fIn6WIlLmkpUtT78matNSiEHIX%2bslh9%2b%2fKVJB%2bRI%2bkzwxo%2flL4PeWDRg%2bw%3d%3d";
 }
 
 /*----- 析构 -----*/
@@ -28,8 +28,8 @@ void DownloadObj::start()
         return;
     }
     //初始化url
-    QUrl urlSpec = QUrl::fromUserInput(urlStr);
-    if ((!urlSpec.isValid()) || urlStr.isEmpty())
+    QUrl urlSpec = QUrl::fromUserInput(m_urlStr);
+    if ((!urlSpec.isValid()) || m_urlStr.isEmpty())
     {
         emit("url erro");
         return;
@@ -45,13 +45,13 @@ void DownloadObj::start()
 /*----- urlStr qml属性 -----*/
 const QString &DownloadObj::getUrlStr() const
 {
-    return urlStr;
+    return m_urlStr;
 }
 
 void DownloadObj::setUrlStr(const QString &newUrlStr)
 {
-    if (urlStr == newUrlStr) return;
-    urlStr = newUrlStr;
+    if (m_urlStr == newUrlStr) return;
+    m_urlStr = newUrlStr;
     emit urlStrChanged();
 }
 
@@ -93,4 +93,15 @@ void DownloadObj::on_finished()
     //关闭文件
     m_file->close();
     emit downloadFinished();
+}
+
+/*----- 槽 下载发生错误-----*/
+void DownloadObj::on_errorOccurred(QNetworkReply::NetworkError code)
+{
+    //关闭连接
+    m_netmanager.deleteLater();
+    m_reply->deleteLater();
+    //关闭文件
+    m_file->close();
+    emit downloadError();
 }

@@ -1,4 +1,4 @@
-QT += quick widgets
+QT += quick widgets multimedia
 #QMAKE_LFLAGS += /MANIFESTUAC:"level='requireAdministrator'uiAccess='false'"
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -11,7 +11,8 @@ SOURCES += \
         ProcObj.cpp \
         main.cpp
 
-RESOURCES += qml.qrc
+RESOURCES += qml.qrc \
+    resources.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -29,3 +30,4 @@ HEADERS += \
     DownloadObj.h \
     FuncModel.h \
     ProcObj.h
+RC_ICONS+="res/shark.ico"

@@ -22,8 +22,8 @@ class DownloadObj : public QObject
     //网络类
     QNetworkAccessManager m_netmanager;
     QNetworkReply *m_reply;
-    QString urlStr; //网络地址
-    QFile *m_file;  //文件
+    QString m_urlStr; //网络地址
+    QFile *m_file;    //文件
     //计算下载时间用
     QTime m_downloadTimer;
     qreal preTime   = 0.0;
@@ -37,10 +37,12 @@ class DownloadObj : public QObject
     void error(QString errorStr);
     void downloadProgress(qint64 bytesRecved, qint64 bytesTotal, qreal speed);
     void downloadFinished();
+    void downloadError();
   private slots:
     void on_readyRead();
     void on_downloadProgress(qint64 bytesRecved, qint64 bytesTotal);
     void on_finished();
+    void on_errorOccurred(QNetworkReply::NetworkError code);
 };
 
 #endif // DOWNLOADOBJ_H

@@ -1,6 +1,7 @@
 ﻿#include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QDir>
 #include "DownloadObj.h"
 #include "ProcObj.h"
 #include "FuncModel.h"
@@ -27,6 +28,8 @@ int main(int argc, char *argv[])
     ctx->setContextProperty("downloader", new DownloadObj);
     ctx->setContextProperty("proc", new ProcObj);
     ctx->setContextProperty("listModel", new FuncModel);
+    //设置一个当前程序路径
+    ctx->setContextProperty("curDirPath", QString(QDir::currentPath()));
     //导入main.qml
     engine.load(url);
     return app.exec();
