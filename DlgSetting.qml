@@ -1,4 +1,4 @@
-﻿import QtQuick 2.0
+﻿import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
@@ -6,9 +6,9 @@ import QtQuick.Dialogs 1.3
 
 Dialog{
     id:root
-    visible: true
     width:480
     height:320
+    title:"设置界面"
     standardButtons: StandardButton.Ok | StandardButton.Cancel
     property alias urlStr:txtUrl.text;    //设置网址行
     RowLayout{

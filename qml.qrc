@@ -2,5 +2,8 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>DlgSetting.qml</file>
+        <file>DlgWeb.qml</file>
+        <file>DlgHelp.qml</file>
+        <file>CurtainEffect.qml</file>
     </qresource>
 </RCC>

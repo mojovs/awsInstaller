@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QDir>
+#include <QtWebEngine/QtWebEngine>
 #include "DownloadObj.h"
 #include "ProcObj.h"
 #include "FuncModel.h"
@@ -12,6 +13,9 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
     QGuiApplication app(argc, argv);
+
+    //初始化web
+    QtWebEngine::initialize();
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));

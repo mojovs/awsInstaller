@@ -11,10 +11,15 @@ ApplicationWindow {
     width: 640
     height: 480
     visible: true
-    title: qsTr("windows安卓子系统工具1.0-mojovs")
+    title: qsTr("windows安卓子系统工具1.1-mojovs")
+    background: Rectangle{
+        color: "#eeeeee"
+    }
+
     property var urlStr ;	//网址
     //菜单栏
     menuBar: MenuBar{
+        //设置菜单
         Menu{
             title: "设置"
             Action{
@@ -23,6 +28,24 @@ ApplicationWindow {
                     //打开设置窗口
                     dlgSet.open();
                 }
+            }
+            Action{
+                text:"在线获取下载地址"
+                onTriggered: {
+                    dlgWeb.open()
+                }
+            }
+        }
+        //帮助菜单
+        Menu{
+            title: "帮助"
+            Action {
+                text:"操作指南"
+                onTriggered:{
+
+                dlgHelp.open()
+                }
+
             }
         }
     }
@@ -68,6 +91,7 @@ ApplicationWindow {
         ProgressBar{
             id:progressBarDownload
             RowLayout.preferredWidth: 360
+            Layout.fillWidth: true
         }
         //下载
         Button{
@@ -106,6 +130,7 @@ ApplicationWindow {
             id:txtInputPath
             implicitWidth: 300
             selectByMouse: true
+            Layout.fillWidth: true
             //anchors.left: labChoosePath.right;
             text: ""
             background: Rectangle{
@@ -133,7 +158,7 @@ ApplicationWindow {
         implicitHeight: 120
         spacing: 8
 
-         Text{
+        Text{
             id:labInstall
             text:"安装进度:"
         }
@@ -142,6 +167,7 @@ ApplicationWindow {
             id:progBarInstall
             RowLayout.preferredWidth: 360
             indeterminate:false
+            Layout.fillWidth: true
         }
         //安装
         Button{
@@ -176,6 +202,7 @@ ApplicationWindow {
             id:btnList
             flat:false
             text:"显示系统功能列表"
+            Layout.fillWidth: true
             //点击
             onClicked: {
                 listModel.listAllFunc();	//列出所有列表
@@ -192,6 +219,7 @@ ApplicationWindow {
             id:btnEnHyper
             flat:false
             text:"激活所需功能"
+            Layout.fillWidth: true
             //点击
             onClicked: {
                 proc.enHyper();
@@ -206,6 +234,7 @@ ApplicationWindow {
             id:btnDisHyper
             flat:false
             text:"取消HyperV功能"
+            Layout.fillWidth: true
             //点击
             onClicked: {
                 proc.disHyper();
@@ -285,14 +314,14 @@ ApplicationWindow {
         id:rowInstallApk
         anchors.top:rowAdb.bottom
         anchors.left:parent.left;
-        width: 300
+        anchors.right: parent.right;
         spacing: 8
         //安装应用汇
         Button{
             id:btnInstallYingyonghui
-            width: 150
             text: "安装应用汇"
             Layout.alignment: Qt.AlignLeft
+            Layout.fillWidth: true
             onClicked:{
                 proc.apkPath=curDirPath+"/apk/yingyonghui.apk"
                 proc.adbInstallApk();
@@ -301,19 +330,21 @@ ApplicationWindow {
             background: Rectangle{
                 width: parent.width
                 height: parent.height
-                radius: 8
+                radius: 4
                 border.width: 2
                 border.color: "firebrick"
                 color: parent.pressed?"silver":"white"
+            }
+            ToolTip{
+                text:"安装应用汇程序，这样以后就可以在应用汇里安装程序了"
             }
 
         }
         //安装自定义apk
         Button{
             id:btnInstallApk
-            width:150
-            Layout.alignment: btnInstallYingyonghui.right
             text: "安装app"
+            Layout.fillWidth: true
             onClicked:{
                 proc.apkPath=txtInstallApk.text
                 proc.adbInstallApk();
@@ -321,7 +352,7 @@ ApplicationWindow {
             }
 
             background: Rectangle{
-                radius: 8
+                radius: 4
 
                 width: parent.width
                 height: parent.height
@@ -487,7 +518,6 @@ ApplicationWindow {
     //设置窗口
     DlgSetting{
         id:dlgSet
-        visible: false
         modality: Qt.WindowModal //模态化
         onAccepted: {
             urlStr=dlgSet.urlStr;	//给网络地址赋值
@@ -500,6 +530,17 @@ ApplicationWindow {
         }
     }
 
+    //获取网页窗口
+    DlgWeb{
+        id:dlgWeb
+        modality: Qt.WindowModal //模态化
+    }
+
+    //帮助窗口
+    DlgHelp{
+        id:dlgHelp
+    }
+
     //选择子系统包
     Plat.FileDialog{
         id:dlgPath
@@ -508,9 +549,6 @@ ApplicationWindow {
         onAccepted: {
             var pathUrl = dlgPath.file;
             txtInputPath.text= getFilePathFromUrl(pathUrl);
-
-
-
         }
 
     }
@@ -646,6 +684,13 @@ ApplicationWindow {
             player.play()
         }
     }
+    Connections{
+        target:dlgWeb
+        onSendUrl:{
+            downloader.urlStr=url;
+        }
+    }
+
     //函数 ，url转路径
     function getFilePathFromUrl(iUrl){
         var str =iUrl.toString();

@@ -1,4 +1,4 @@
-QT += quick widgets multimedia
+QT += quick multimedia webengine
 #QMAKE_LFLAGS += /MANIFESTUAC:"level='requireAdministrator'uiAccess='false'"
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
