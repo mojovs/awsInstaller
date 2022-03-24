@@ -12,9 +12,6 @@ ApplicationWindow {
     height: 480
     visible: true
     title: qsTr("windows安卓子系统工具1.3-mojovs")
-    background: Rectangle{
-        color: "#eeeeee"
-    }
 
     property var urlStr ;	//网址
     //菜单栏
@@ -385,6 +382,17 @@ ApplicationWindow {
                 Layout.rightMargin: 4
                 onClicked: {
                     listModel.isFunctionAllReady();
+                }
+            }
+            Button{
+                id:btnUpdateList
+                text:"刷新"
+                Layout.fillWidth: true
+                Layout.leftMargin: 4
+                Layout.rightMargin: 4
+                onClicked: {
+                    listModel.listAllFunc();
+                    listView.update()
                 }
             }
 

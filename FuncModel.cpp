@@ -34,7 +34,32 @@ FuncModel::~FuncModel()
     delete proc;
 }
 
-void FuncModel::listAllFunc() {}
+//开始刷新列表
+void FuncModel::listAllFunc()
+{
+    //运行命令
+    proc->getFuncList();
+    //获取图
+    m_map = proc->getFuncList().data(); //获取map
+    qDebug() << "getMap";
+    //添加到model里面
+    QMap<QString, bool>::Iterator iterator = m_map->begin();
+    //清除变量
+    nameList.clear();
+    enList.clear();
+    qDebug() << "QMap size:" << m_map->size();
+    //设置模型列表里的内容
+    beginResetModel();
+    while (iterator != m_map->end())
+    {
+        //导入列表
+        nameList.append(iterator.key());
+        enList.append(iterator.value());
+        //迭代递进
+        iterator++;
+    }
+    endResetModel();
+}
 /*------ 检查是否已经开启了该功能 ------*/
 /*  需要打开下面功能
  *  VirtualMachinePlatform
