@@ -11,7 +11,7 @@ ApplicationWindow {
     width: 640
     height: 480
     visible: true
-    title: qsTr("windows安卓子系统工具1.1-mojovs")
+    title: qsTr("windows安卓子系统工具1.3-mojovs")
     background: Rectangle{
         color: "#eeeeee"
     }
@@ -205,7 +205,6 @@ ApplicationWindow {
             Layout.fillWidth: true
             //点击
             onClicked: {
-                listModel.listAllFunc();	//列出所有列表
                 dlgFunc.open()
                 listView.update()
             }
@@ -367,7 +366,6 @@ ApplicationWindow {
     //显示列表弹出对话框
     Dialog.Dialog{
         id:dlgFunc
-        visible: false
         modality:Qt.WindowModal
         title: "windows 可选功能"
         width: 640
@@ -379,14 +377,30 @@ ApplicationWindow {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right:parent.right
-            height: 40
+            Button{
+                id:btnIsFuncsAllReady
+                text:"查看功能是否已全被激活"
+                Layout.fillWidth: true
+                Layout.leftMargin: 4
+                Layout.rightMargin: 4
+                onClicked: {
+                    listModel.isFunctionAllReady();
+                }
+            }
+
             Button{
                 id:btnEnableFunc
                 text:"激活功能"
+                Layout.fillWidth: true
+                Layout.leftMargin: 4
+                Layout.rightMargin: 4
             }
             Button{
                 id:btnDisableFunc
                 text:"取消功能"
+                Layout.fillWidth: true
+                Layout.leftMargin: 4
+                Layout.rightMargin: 4
             }
         }
         //listView代理
@@ -620,19 +634,20 @@ ApplicationWindow {
             progressBarDownload.to=bytesTotal;
             progressBarDownload.value=bytesRecved;
         }
-        //下载完成
-        onDownloadFinished:{
-            console.log("下载完成")
-            msgDlgFinished.open()
-            msgDlgFinished.text="下载完成"
-            //响铃
-            player.play()
-        }
-        //下载失败
-        onDownloadError:{
-            console.log("下载失败")
-            msgDlgFinished.open()
-            msgDlgFinished.text="下载失败"
+
+        //下载结果
+        onDownloadSuccess:{
+            if(flag == true){
+                console.log("下载成功")
+                msgDlgFinished.text="下载成功"
+                msgDlgFinished.open()
+                //响铃
+                player.play()
+            }else{
+                console.log("下载失败")
+                msgDlgFinished.text="下载失败"
+                msgDlgFinished.open()
+            }
         }
     }
     //命令执行槽
@@ -646,7 +661,7 @@ ApplicationWindow {
             console.log("命令执行失败")
             //发送信号
             msgDlgFinished.open();
-            msgDlgFinished.text="执行命令失败,请检测是否以管理员身份运行该程序"
+            msgDlgFinished.text="执行命令失败,请检测1.是否以管理员身份运行该程序\n2.是否已经开启过该功能"
             //关闭进度条的循环滚动
             progBarInstall.indeterminate=false
         }
@@ -689,6 +704,25 @@ ApplicationWindow {
         onSendUrl:{
             downloader.urlStr=url;
         }
+    }
+
+    //模型槽
+    Connections{
+        target:listModel
+        //所有都准备好了
+        onFuncsAllReady:{
+            if(enable == true)
+            {
+                msgDlgFinished.text="成功，开启安卓子系统的相关功能已被激活";
+                msgDlgFinished.open()
+            }else{
+
+                msgDlgFinished.text="开启安卓子系统的相关功能有部分没激活，请去激活";
+                msgDlgFinished.open()
+
+            }
+        }
+
     }
 
     //函数 ，url转路径

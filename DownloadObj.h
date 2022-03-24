@@ -26,9 +26,10 @@ class DownloadObj : public QObject
     QFile *m_file;    //文件
     //计算下载时间用
     QTime m_downloadTimer;
-    qreal preTime   = 0.0;
-    qreal m_speed   = 0; //下载速度
-    qreal prevBytes = 0; //之前一个下载进度的bytes数量
+    qreal preTime            = 0.0;
+    qreal m_speed            = 0;     //下载速度
+    bool erroOccuredWhenDown = false; //下载发生过错误
+    qreal prevBytes          = 0;     //之前一个下载进度的bytes数量
 
     Q_PROPERTY(QString urlStr READ getUrlStr WRITE setUrlStr RESET resetUrlStr NOTIFY urlStrChanged)
 
@@ -36,8 +37,7 @@ class DownloadObj : public QObject
     void urlStrChanged();
     void error(QString errorStr);
     void downloadProgress(qint64 bytesRecved, qint64 bytesTotal, qreal speed);
-    void downloadFinished();
-    void downloadError();
+    void downloadSuccess(bool flag);
   private slots:
     void on_readyRead();
     void on_downloadProgress(qint64 bytesRecved, qint64 bytesTotal);

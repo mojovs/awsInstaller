@@ -36,7 +36,7 @@ class ProcObj : public QObject
     void subIPChanged();
     void adbSubSysInstallS(); // sub子系统安装成功
     void adbConnectSuccess(); // adb连接成贡
-    void adbConnectFailed();  // adb连接成贡
+    void adbConnectFailed();  // adb连接失败
     void adbApkInstallS();    // apk安装成功
     void adbApkInstallF();    // apk安装蚀本
     void apkPathChanged();

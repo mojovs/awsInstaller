@@ -14,6 +14,9 @@ DownloadObj::DownloadObj(QObject *parent) : QObject{parent}
 DownloadObj::~DownloadObj()
 {
     delete m_file;
+    //关闭连接
+    m_netmanager.deleteLater();
+    m_reply->deleteLater();
 }
 /*----- 开始执行网络下载 -----*/
 void DownloadObj::start()
@@ -39,6 +42,9 @@ void DownloadObj::start()
     //等待回复
     connect(m_reply, SIGNAL(readyRead()), this, SLOT(on_readyRead()));
     connect(m_reply, SIGNAL(downloadProgress(qint64, qint64)), this, SLOT(on_downloadProgress(qint64, qint64)));
+    connect(m_reply, &QNetworkReply::finished, this, &DownloadObj::on_finished);           //下载完成
+    connect(m_reply, &QNetworkReply::errorOccurred, this, &DownloadObj::on_errorOccurred); //下载错误
+
     //开始计时
     m_downloadTimer.start();
 }
@@ -87,21 +93,29 @@ void DownloadObj::on_downloadProgress(qint64 bytesRecved, qint64 bytesTotal)
 /*----- 槽 下载完成-----*/
 void DownloadObj::on_finished()
 {
-    //关闭连接
-    m_netmanager.deleteLater();
-    m_reply->deleteLater();
     //关闭文件
-    m_file->close();
-    emit downloadFinished();
+    if (m_file->isOpen())
+    {
+        m_file->close();
+    }
+    if (false == erroOccuredWhenDown)
+    {
+        //发送成功下载的消息
+        emit downloadSuccess(true);
+    }
+    //重新给下载错误标志置位
+    erroOccuredWhenDown = false;
 }
 
 /*----- 槽 下载发生错误-----*/
 void DownloadObj::on_errorOccurred(QNetworkReply::NetworkError code)
 {
-    //关闭连接
-    m_netmanager.deleteLater();
-    m_reply->deleteLater();
-    //关闭文件
-    m_file->close();
-    emit downloadError();
+    emit downloadSuccess(false);
+    erroOccuredWhenDown = true;
+    // m_reply->deleteLater();
+    // m_netmanager.deleteLater();
+    // if (m_file->isOpen())
+    // {
+    //     m_file->close();
+    // }
 }

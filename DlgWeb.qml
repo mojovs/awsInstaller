@@ -79,7 +79,7 @@ Dialog{
                 ColorAnimation {
                     id:animBtn
                     loops: Animation.Infinite
-                    target: parent.border.color
+                    target:border.color
                     from: "white"
                     to: "firebrick"
                     duration: 200

@@ -3,20 +3,8 @@
 /*------ 可选功能 ------*/
 FuncModel::FuncModel(QObject *parent) : QAbstractListModel(parent)
 {
-    //添加数据
-    nameList.append("Name");
-    enList.append(false);
     //创建prcess
     proc = new CmdProc();
-}
-
-FuncModel::~FuncModel()
-{
-    delete proc;
-}
-
-void FuncModel::listAllFunc()
-{
     //运行命令
     proc->getFuncList();
     //获取图
@@ -28,6 +16,7 @@ void FuncModel::listAllFunc()
     nameList.clear();
     enList.clear();
     qDebug() << "QMap size:" << m_map->size();
+    //设置模型列表里的内容
     beginResetModel();
     while (iterator != m_map->end())
     {
@@ -38,6 +27,50 @@ void FuncModel::listAllFunc()
         iterator++;
     }
     endResetModel();
+}
+
+FuncModel::~FuncModel()
+{
+    delete proc;
+}
+
+void FuncModel::listAllFunc() {}
+/*------ 检查是否已经开启了该功能 ------*/
+/*  需要打开下面功能
+ *  VirtualMachinePlatform
+    Microsoft-Hyper-V-All
+    Microsoft-Hyper-V
+    Microsoft-Hyper-V-Tools-All
+    Microsoft-Hyper-V-Management-PowerShell
+    Microsoft-Hyper-V-Hypervisor
+    Microsoft-Hyper-V-Services
+    Microsoft-Hyper-V-Management-Clients
+*/
+void FuncModel::isFunctionAllReady()
+{
+    //检查
+    QStringList names;
+    names << "VirtualMachinePlatform"
+          << "Microsoft-Hyper-V-All"
+          << "Microsoft-Hyper-V"
+          << "Microsoft-Hyper-V-Tools-All"
+          << "Microsoft-Hyper-V-Management-PowerShell"
+          << "Microsoft-Hyper-V-Hypervisor"
+          << "Microsoft-Hyper-V-Services"
+          << "Microsoft-Hyper-V-Management-Clients";
+    //循环匹配
+    for (int i = 0; i < names.length(); i++)
+    {
+        int index = nameList.indexOf(names.at(i));
+        //但凡有一个没开的
+        if (enList.at(index) == false)
+        {
+            qDebug() << "dont enable the functions!!";
+            emit funcsAllReady(false);
+        }
+    }
+    //发送成功信号
+    emit funcsAllReady(true);
 }
 
 QVariant FuncModel::data(const QModelIndex &index, int role) const
